@@ -6,10 +6,11 @@
           <img
             v-bind:src="imageUrl"
             class="profile-pic"
-            alt="profile picture"
-          />
+            alt="profile picture" />
 
-          <SectionHeadline :headline="headlines[0]" @headline-edited="updateHeadline($event, 0)"/>
+          <SectionHeadline
+            :headline="headlines[0]"
+            @headline-edited="updateHeadline($event, 0)" />
 
           <div
             contenteditable="true"
@@ -19,17 +20,17 @@
         </ResumeSection>
 
         <ResumeSection>
-          <SectionHeadline :headline="headlines[1]" @headline-edited="updateHeadline($event, 1)"/>
-          
-          <Contact
-            :contact="contact"
-            @edit="updateNestedProperty"
-          />
-          
+          <SectionHeadline
+            :headline="headlines[1]"
+            @headline-edited="updateHeadline($event, 1)" />
+
+          <Contact :contact="contact" @edit="updateNestedProperty" />
         </ResumeSection>
 
         <ResumeSection>
-          <SectionHeadline :headline="headlines[2]" @headline-edited="updateHeadline($event, 2)"/>
+          <SectionHeadline
+            :headline="headlines[2]"
+            @headline-edited="updateHeadline($event, 2)" />
           <ul>
             <li
               v-for="(skill, index) in skills"
@@ -39,10 +40,16 @@
               {{ skill }}
             </li>
           </ul>
+          <EditButtons
+            @add-click="skills.push('new entry')"
+            @remove-click="skills.pop()"
+            :show-remove-btn="skills.length > 0" />
         </ResumeSection>
 
         <ResumeSection>
-          <SectionHeadline :headline="headlines[3]" @headline-edited="updateHeadline($event, 3)"/>
+          <SectionHeadline
+            :headline="headlines[3]"
+            @headline-edited="updateHeadline($event, 3)" />
           <ul>
             <li
               v-for="(highlight, index) in highlights"
@@ -52,6 +59,10 @@
               {{ highlight }}
             </li>
           </ul>
+          <EditButtons
+            @add-click="highlights.push('new entry')"
+            @remove-click="highlights.pop()"
+            :show-remove-btn="highlights.length > 0" />
         </ResumeSection>
       </div>
 
@@ -71,24 +82,37 @@
         </div>
 
         <ResumeSection>
-          <SectionHeadline :headline="headlines[4]" @headline-edited="updateHeadline($event, 4)"/>
+          <div class="d-flex">
+            <SectionHeadline
+              :headline="headlines[4]"
+              @headline-edited="updateHeadline($event, 4)"
+            />
+            <EditButtons
+              :show-remove-btn="false"
+              text-add="Add experience"
+              @add-click="addExperience"
+            />
+          </div>
 
           <div
             v-for="(item, index) in experience"
             :key="index"
             class="inner-section">
-            <div
-              contenteditable="true"
-              @input="updateExperience($event, 'title', index)">
-              {{ item.title }}
+            <div class="d-flex justify-content-between">
+              <div
+                contenteditable="true"
+                @input="updateExperience($event, 'title', index)">
+                {{ item.title }}
+              </div>
+              <EditButtons @remove-click="removeExperience(index)" :show-add-btn="false"/>
             </div>
             <div class="d-flex justify-content-between">
               <div>
                 <span
                   contenteditable="true"
                   @input="updateExperience($event, 'company', index)">
-                  {{ item.company }}
-                </span>,
+                  {{ item.company }} </span
+                >,
                 <span
                   contenteditable="true"
                   @input="updateExperience($event, 'location', index)">
@@ -111,21 +135,38 @@
                 {{ desc }}
               </li>
             </ul>
+            <EditButtons
+              @add-click="item.description.push('new entry')"
+              @remove-click="item.description.pop()"
+              :show-remove-btn="item.description.length > 0" />
           </div>
         </ResumeSection>
 
         <ResumeSection>
-          <SectionHeadline :headline="headlines[5]" @headline-edited="updateHeadline($event, 5)"/>
+          <div class="d-flex">
+            <SectionHeadline
+              :headline="headlines[5]"
+              @headline-edited="updateHeadline($event, 5)"
+            />
+            <EditButtons
+              :show-remove-btn="false"
+              text-add="Add education"
+              @add-click="addEducation"
+            />
+          </div>
 
           <div
             v-for="(item, index) in education"
             :key="index"
             class="inner-section">
 
-            <div
-              contenteditable="true"
-              @input="updateEducation($event, 'title', index)">
-              {{ item.title }}
+            <div class="d-flex justify-content-between">
+              <div
+                contenteditable="true"
+                @input="updateEducation($event, 'title', index)">
+                {{ item.title }}
+              </div>
+              <EditButtons @remove-click="removeEducation(index)" :show-add-btn="false"/>
             </div>
 
             <div class="d-flex justify-content-between">
@@ -133,8 +174,8 @@
                 <span
                   contenteditable="true"
                   @input="updateEducation($event, 'university', index)">
-                  {{ item.university }}
-                </span>,
+                  {{ item.university }} </span
+                >,
                 <span
                   contenteditable="true"
                   @input="updateEducation($event, 'location', index)">
@@ -158,7 +199,10 @@
                 {{ desc }}
               </li>
             </ul>
-
+            <EditButtons
+              @add-click="item.description.push('new entry')"
+              @remove-click="item.description.pop()"
+              :show-remove-btn="item.description.length > 0" />
           </div>
         </ResumeSection>
       </div>
@@ -167,15 +211,17 @@
 </template>
 
 <script>
-import ResumeSection from './components/ResumeSection.vue';
-import SectionHeadline from './components/SectionHeadline.vue';
-import Contact from './components/Contact.vue';
+import ResumeSection from "./components/ResumeSection.vue";
+import SectionHeadline from "./components/SectionHeadline.vue";
+import Contact from "./components/Contact.vue";
+import EditButtons from "./components/EditButtons.vue";
 
 export default {
   components: {
     ResumeSection,
     SectionHeadline,
-    Contact
+    Contact,
+    EditButtons,
   },
   data() {
     return {
@@ -243,8 +289,7 @@ export default {
           location: "New York City",
           date: "2016-2017",
           description: [
-            "Collaborated with external partners to integrate third-party data sources, expanding the company's data assets and enhancing predictive modeling capabilities.",
-            "Presented data-driven insights and recommendations to executive leadership, influencing strategic decisions and driving revenue growth.",
+            "Collaborated with external partners to integrate third-party data sources, expanding the company's data assets and enhancing predictive modeling capabilities."
           ],
         },
       ],
@@ -294,6 +339,34 @@ export default {
     updateEducationDescription(event, index1, index2) {
       this.education[index1]["description"][index2] = event.target.innerText;
     },
+    addExperience() {
+      this.experience.unshift({
+        title: "Job Title",
+        company: "Company",
+        location: "Location",
+        date: "date range",
+        description: [
+          "description"
+        ]
+      })
+    },
+    addEducation() {
+      this.education.unshift({
+        title: "Education title",
+        university: "University",
+        location: "Location",
+        date: "date range",
+        description: [
+          "Summa cum laude, GPA 1.0"
+        ]
+      })
+    },
+    removeExperience(index) {
+      this.experience.splice(index, 1);
+    },
+    removeEducation(index) {
+      this.education.splice(index, 1);
+    }
   },
 };
 </script>
@@ -344,7 +417,7 @@ export default {
 
 #resume ul {
   padding-inline-start: 16px;
-  margin-block-end: 0px;
+  margin-block-end: 5px;
   margin-block-start: 5px;
 }
 
