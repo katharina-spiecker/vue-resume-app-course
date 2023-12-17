@@ -11,6 +11,8 @@ body {
   --highlight-color-right: #3943b7;
   --background-color-right: #ffffff;
   --text-color-right: #000505;
+
+  --color-black: #050517;
 }
 
 .container {
@@ -24,4 +26,10 @@ body {
 
 .justify-content-between {
   justify-content: space-between;
+}
+
+[contenteditable="true"] {
+  border-radius: 2px;
+  background-color: #cacaca71;
+  padding:  2px;
 }
