@@ -1,12 +1,83 @@
 <template>
   <main class="container">
-    <EditToggle @edit-mode-toggled="toggleEditMode"/>
-    <div id="resume" class="d-flex" :class="{'edit-off': !editing}">
-      <div class="left-col">
+    
+    <Sidebar>
+      <EditToggle @edit-mode-toggled="toggleEditMode"/>
+
+      <div>Left column</div>
+      <ColorInput
+        label="Highlight color"
+        :default-color="colors.left.highlight"
+        @color-changed="colors.left.highlight = $event"
+      />
+
+      <ColorInput
+        label="Background color"
+        :default-color="colors.left.background"
+        @color-changed="colors.left.background = $event"
+      />
+
+      <ColorInput
+        label="Text color"
+        :default-color="colors.left.text"
+        @color-changed="colors.left.text = $event"
+      />
+
+      <div>Right column</div>
+      <ColorInput
+        label="Highlight color"
+        :default-color="colors.right.highlight"
+        @color-changed="colors.right.highlight = $event"
+      />
+
+      <ColorInput
+        label="Background color"
+        :default-color="colors.right.background"
+        @color-changed="colors.right.background = $event"
+      />
+
+      <ColorInput
+        label="Text color"
+        :default-color="colors.right.text"
+        @color-changed="colors.right.text = $event"
+      />
+
+      <PercentageInput
+        label="Width of left column"
+        :min="20"
+        :max="80"
+        :current-value="widthLeft"
+        @percentage-changed="widthLeft = $event"
+      />
+
+      <SelectInput
+        label="Headline thickness"
+        :options="[{'name': 'Thin', 'value': '300'}, {'name': 'Medium', 'value': '400'}, {'name': 'Thick', 'value': '600'}]"
+        :default-option="headlineWeight"
+        @update-selection="headlineWeight = $event"
+        />
+      <SelectInput
+        label="Photo shape"
+        :options="[{'name': 'Square', 'value': 'square'}, {'name': 'Round', 'value': 'round'}]"
+        :default-option="imageShape"
+        @update-selection="imageShape = $event"
+      />
+
+    </Sidebar>
+
+
+    <div
+      id="resume"
+      class="d-flex"
+      :class="{'edit-off': !editing}"
+      :style="cssVariables"
+    >
+      <div class="left-col" :style="{width: percentageWidthLeft}">
         <ResumeSection>
           <img
             v-bind:src="imageUrl"
             class="profile-pic"
+            :class="{'circle': imageShape == 'round'}"
             alt="profile picture" />
 
           <SectionHeadline
@@ -33,6 +104,7 @@
             :contact="contact"
             @edit="updateNestedProperty"
             :editing="editing"
+            :icon-color="colors.left.highlight"
           />
         </ResumeSection>
 
@@ -232,6 +304,10 @@ import SectionHeadline from "./components/SectionHeadline.vue";
 import Contact from "./components/Contact.vue";
 import EditButtons from "./components/EditButtons.vue";
 import EditToggle from "./components/EditToggle.vue";
+import Sidebar from "./components/Sidebar.vue";
+import ColorInput from "./components/ColorInput.vue";
+import PercentageInput from "./components/PercentageInput.vue";
+import SelectInput from "./components/SelectInput.vue";
 
 export default {
   components: {
@@ -239,10 +315,26 @@ export default {
     SectionHeadline,
     Contact,
     EditButtons,
-    EditToggle
+    EditToggle,
+    Sidebar,
+    ColorInput,
+    PercentageInput,
+    SelectInput
   },
   data() {
     return {
+      colors: {
+        left: {
+          highlight: '#82c0cc',
+          text: '#ffffff',
+          background: '#3943b7'
+        },
+        right: {
+          highlight: '#3943b7',
+          text: '#000505',
+          background: '#ffffff'
+        }
+      },
       name: "Michaela Scarn",
       title: "Senior Data Scientist",
       introText:
@@ -333,8 +425,27 @@ export default {
           ],
         },
       ],
-      editing: true
+      editing: true,
+      widthLeft: 30,
+      imageShape: "round",
+      headlineWeight: "400"
     };
+  },
+  computed: {
+    cssVariables() {
+      return {
+        '--highlight-color-left': this.colors.left.highlight,
+        '--background-color-left': this.colors.left.background,
+        '--text-color-left': this.colors.left.text,
+        '--highlight-color-right': this.colors.right.highlight,
+        '--background-color-right': this.colors.right.background,
+        '--text-color-right': this.colors.right.text,
+        '--headline-weight': this.headlineWeight
+      }
+    },
+    percentageWidthLeft() {
+      return this.widthLeft + "%";
+    }
   },
   methods: {
     updateHeadline(newValue, index) {
@@ -397,17 +508,33 @@ export default {
 #resume {
   box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px,
     rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
-  /* DIN A4 standard paper size. commonly used for resumes
-    For North America letter size use width: 8.5in; height: 11in; */
-  height: 297mm;
   width: 210mm;
+  margin-left: auto;
+}
+
+#resume.edit-off {
+  /* DIN A4 standard paper size. commonly used for resumes
+  For North America letter size use width: 8.5in; height: 11in; */
+  height: 297mm;
+}
+
+@media (min-width: 1350px) {
+  #resume {
+    margin-left: 300px;
+  }
+}
+
+@media (min-width: 1600px) {
+  #resume {
+    margin-left: auto;
+    margin-right: auto;
+  }
 }
 
 .left-col {
   background-color: var(--background-color-left);
   color: var(--text-color-left);
   border-right: 1px solid var(--highlight-color-left);
-  width: 30%;
   padding: 30px;
 }
 
@@ -452,6 +579,9 @@ export default {
   object-fit: cover;
   margin-left: auto;
   margin-right: auto;
+}
+
+.circle {
   border-radius: 50%;
 }
 

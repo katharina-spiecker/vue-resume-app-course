@@ -5,7 +5,7 @@
         xmlns="http://www.w3.org/2000/svg"
         height="16"
         width="16"
-        fill="#fff"
+        :fill="iconColor"
         viewBox="0 0 512 512">
         <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2023 Fonticons, Inc. -->
         <path
@@ -23,7 +23,7 @@
         xmlns="http://www.w3.org/2000/svg"
         height="16"
         width="16"
-        fill="#fff"
+        :fill="iconColor"
         viewBox="0 0 512 512">
         <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2023 Fonticons, Inc. -->
         <path
@@ -40,7 +40,7 @@
         xmlns="http://www.w3.org/2000/svg"
         height="16"
         width="18"
-        fill="#fff"
+        :fill="iconColor"
         viewBox="0 0 576 512">
         <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2023 Fonticons, Inc. -->
         <path
@@ -64,6 +64,10 @@ export default {
     "editing": {
       type: Boolean,
       default: true
+    },
+    "iconColor": {
+      type: String,
+      default: "#ffffff"
     }
   }
 };

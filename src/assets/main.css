@@ -5,13 +5,6 @@ body {
 }
 
 :root {
-  --highlight-color-left: #82c0cc;
-  --background-color-left: #3943b7;
-  --text-color-left: #ffffff;
-  --highlight-color-right: #3943b7;
-  --background-color-right: #ffffff;
-  --text-color-right: #000505;
-
   --color-black: #050517;
 }
 
@@ -31,5 +24,20 @@ body {
 [contenteditable="true"] {
   border-radius: 2px;
   background-color: #cacaca71;
-  padding:  2px;
+  padding: 2px;
+}
+
+.custom-input {
+  padding: 6px 12px;
+  background-color: #fff;
+  border: 1px solid #ced4da;
+  color: #495057;
+  border-radius: 4px;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+input:focus {
+  outline-color: #82c0cc;
+  border-color: #82c0cc;
 }
