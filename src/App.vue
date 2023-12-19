@@ -1,90 +1,83 @@
 <template>
   <main class="container">
-    
     <Sidebar>
-      <EditToggle @edit-mode-toggled="toggleEditMode"/>
+      <EditToggle @edit-mode-toggled="toggleEditMode" />
 
       <div>Left column</div>
       <ColorInput
         label="Highlight color"
         :default-color="colors.left.highlight"
-        @color-changed="colors.left.highlight = $event"
-      />
+        @color-changed="colors.left.highlight = $event" />
 
       <ColorInput
         label="Background color"
         :default-color="colors.left.background"
-        @color-changed="colors.left.background = $event"
-      />
+        @color-changed="colors.left.background = $event" />
 
       <ColorInput
         label="Text color"
         :default-color="colors.left.text"
-        @color-changed="colors.left.text = $event"
-      />
+        @color-changed="colors.left.text = $event" />
 
       <div>Right column</div>
       <ColorInput
         label="Highlight color"
         :default-color="colors.right.highlight"
-        @color-changed="colors.right.highlight = $event"
-      />
+        @color-changed="colors.right.highlight = $event" />
 
       <ColorInput
         label="Background color"
         :default-color="colors.right.background"
-        @color-changed="colors.right.background = $event"
-      />
+        @color-changed="colors.right.background = $event" />
 
       <ColorInput
         label="Text color"
         :default-color="colors.right.text"
-        @color-changed="colors.right.text = $event"
-      />
+        @color-changed="colors.right.text = $event" />
 
       <PercentageInput
         label="Width of left column"
         :min="20"
         :max="80"
         :current-value="widthLeft"
-        @percentage-changed="widthLeft = $event"
-      />
+        @percentage-changed="widthLeft = $event" />
 
       <SelectInput
         label="Headline thickness"
-        :options="[{'name': 'Thin', 'value': '300'}, {'name': 'Medium', 'value': '400'}, {'name': 'Thick', 'value': '600'}]"
+        :options="[
+          { name: 'Thin', value: '300' },
+          { name: 'Medium', value: '400' },
+          { name: 'Thick', value: '600' },
+        ]"
         :default-option="headlineWeight"
-        @update-selection="headlineWeight = $event"
-        />
+        @update-selection="headlineWeight = $event" />
       <SelectInput
         label="Photo shape"
-        :options="[{'name': 'Square', 'value': 'square'}, {'name': 'Round', 'value': 'round'}]"
+        :options="[
+          { name: 'Square', value: 'square' },
+          { name: 'Round', value: 'round' },
+        ]"
         :default-option="imageShape"
-        @update-selection="imageShape = $event"
-      />
-
+        @update-selection="imageShape = $event" />
     </Sidebar>
-
 
     <div
       id="resume"
       class="d-flex"
-      :class="{'edit-off': !editing}"
-      :style="cssVariables"
-    >
-      <div class="left-col" :style="{width: percentageWidthLeft}">
+      :class="{ 'edit-off': !editing }"
+      :style="cssVariables">
+      <div class="left-col" :style="{ width: percentageWidthLeft }">
         <ResumeSection>
           <img
             v-bind:src="imageUrl"
             class="profile-pic"
-            :class="{'circle': imageShape == 'round'}"
+            :class="{ circle: imageShape == 'round' }"
             alt="profile picture" />
 
           <SectionHeadline
             :headline="headlines[0]"
             @headline-edited="updateHeadline($event, 0)"
-            :editing="editing"
-          />
+            :editing="editing" />
 
           <div
             :contenteditable="editing"
@@ -97,23 +90,20 @@
           <SectionHeadline
             :headline="headlines[1]"
             @headline-edited="updateHeadline($event, 1)"
-            :editing="editing"
-          />
+            :editing="editing" />
 
           <Contact
             :contact="contact"
             @edit="updateNestedProperty"
             :editing="editing"
-            :icon-color="colors.left.highlight"
-          />
+            :icon-color="colors.left.highlight" />
         </ResumeSection>
 
         <ResumeSection>
           <SectionHeadline
             :headline="headlines[2]"
             @headline-edited="updateHeadline($event, 2)"
-            :editing="editing"
-          />
+            :editing="editing" />
 
           <ul>
             <li
@@ -134,8 +124,7 @@
           <SectionHeadline
             :headline="headlines[3]"
             @headline-edited="updateHeadline($event, 3)"
-            :editing="editing"
-          />
+            :editing="editing" />
           <ul>
             <li
               v-for="(highlight, index) in highlights"
@@ -172,13 +161,11 @@
             <SectionHeadline
               :headline="headlines[4]"
               @headline-edited="updateHeadline($event, 4)"
-              :editing="editing"
-            />
+              :editing="editing" />
             <EditButtons
               :show-remove-btn="false"
               text-add="Add experience"
-              @add-click="addExperience"
-            />
+              @add-click="addExperience" />
           </div>
 
           <div
@@ -191,7 +178,9 @@
                 @input="updateExperience($event, 'title', index)">
                 {{ item.title }}
               </div>
-              <EditButtons @remove-click="removeExperience(index)" :show-add-btn="false"/>
+              <EditButtons
+                @remove-click="removeExperience(index)"
+                :show-add-btn="false" />
             </div>
             <div class="d-flex justify-content-between">
               <div>
@@ -234,27 +223,26 @@
             <SectionHeadline
               :headline="headlines[5]"
               @headline-edited="updateHeadline($event, 5)"
-              :editing="editing"
-            />
+              :editing="editing" />
             <EditButtons
               :show-remove-btn="false"
               text-add="Add education"
-              @add-click="addEducation"
-            />
+              @add-click="addEducation" />
           </div>
 
           <div
             v-for="(item, index) in education"
             :key="index"
             class="inner-section">
-
             <div class="d-flex justify-content-between">
               <div
                 :contenteditable="editing"
                 @input="updateEducation($event, 'title', index)">
                 {{ item.title }}
               </div>
-              <EditButtons @remove-click="removeEducation(index)" :show-add-btn="false"/>
+              <EditButtons
+                @remove-click="removeEducation(index)"
+                :show-add-btn="false" />
             </div>
 
             <div class="d-flex justify-content-between">
@@ -319,21 +307,21 @@ export default {
     Sidebar,
     ColorInput,
     PercentageInput,
-    SelectInput
+    SelectInput,
   },
   data() {
     return {
       colors: {
         left: {
-          highlight: '#82c0cc',
-          text: '#ffffff',
-          background: '#3943b7'
+          highlight: "#82c0cc",
+          text: "#ffffff",
+          background: "#3943b7",
         },
         right: {
-          highlight: '#3943b7',
-          text: '#000505',
-          background: '#ffffff'
-        }
+          highlight: "#3943b7",
+          text: "#000505",
+          background: "#ffffff",
+        },
       },
       name: "Michaela Scarn",
       title: "Senior Data Scientist",
@@ -399,7 +387,7 @@ export default {
           location: "New York City",
           date: "2016-2017",
           description: [
-            "Collaborated with external partners to integrate third-party data sources, expanding the company's data assets and enhancing predictive modeling capabilities."
+            "Collaborated with external partners to integrate third-party data sources, expanding the company's data assets and enhancing predictive modeling capabilities.",
           ],
         },
       ],
@@ -428,24 +416,24 @@ export default {
       editing: true,
       widthLeft: 30,
       imageShape: "round",
-      headlineWeight: "400"
+      headlineWeight: "400",
     };
   },
   computed: {
     cssVariables() {
       return {
-        '--highlight-color-left': this.colors.left.highlight,
-        '--background-color-left': this.colors.left.background,
-        '--text-color-left': this.colors.left.text,
-        '--highlight-color-right': this.colors.right.highlight,
-        '--background-color-right': this.colors.right.background,
-        '--text-color-right': this.colors.right.text,
-        '--headline-weight': this.headlineWeight
-      }
+        "--highlight-color-left": this.colors.left.highlight,
+        "--background-color-left": this.colors.left.background,
+        "--text-color-left": this.colors.left.text,
+        "--highlight-color-right": this.colors.right.highlight,
+        "--background-color-right": this.colors.right.background,
+        "--text-color-right": this.colors.right.text,
+        "--headline-weight": this.headlineWeight,
+      };
     },
     percentageWidthLeft() {
       return this.widthLeft + "%";
-    }
+    },
   },
   methods: {
     updateHeadline(newValue, index) {
@@ -475,10 +463,8 @@ export default {
         company: "Company",
         location: "Location",
         date: "date range",
-        description: [
-          "description"
-        ]
-      })
+        description: ["description"],
+      });
     },
     addEducation() {
       this.education.unshift({
@@ -486,10 +472,8 @@ export default {
         university: "University",
         location: "Location",
         date: "date range",
-        description: [
-          "Summa cum laude, GPA 1.0"
-        ]
-      })
+        description: ["Summa cum laude, GPA 1.0"],
+      });
     },
     removeExperience(index) {
       this.experience.splice(index, 1);
@@ -499,7 +483,7 @@ export default {
     },
     toggleEditMode(isChecked) {
       this.editing = isChecked;
-    }
+    },
   },
 };
 </script>
