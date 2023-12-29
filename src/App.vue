@@ -5,6 +5,7 @@
         @switch-toggled="toggleEditMode"
         label="Edit mode"
         off-label="Export Mode"
+        :toggle-active="editing"
       />
 
       <div class="sidebar-section" v-if="!editing">
@@ -16,8 +17,6 @@
         />
         <ExportPdf :resume-format="resumeFormat"/>
       </div>
-
-
 
       <div class="sidebar-section" v-if="editing">
         <div class="sidebar-title">Left column</div>
@@ -78,7 +77,11 @@
       </div>
 
       <div class="sidebar-section" v-if="editing">
-        <ToggleSwitch @switch-toggled="toggleImageDisplay" label="Show photo"/>
+        <ToggleSwitch
+          @switch-toggled="toggleImageDisplay"
+          label="Show photo"
+          :toggle-active="showImage"
+        />
 
         <SelectInput
           v-if="showImage"
@@ -101,6 +104,7 @@
     </Sidebar>
 
     <div class="resume-wrapper">
+      <CustomButton btn-type="primary-right" @click="saveConfig">Save configuration in browser</CustomButton>
       <div
         id="resume"
         class="d-flex"
@@ -340,8 +344,20 @@ import PercentageInput from "./components/PercentageInput.vue";
 import SelectInput from "./components/SelectInput.vue";
 import ImgUpload from "./components/ImgUpload.vue";
 import ExportPdf from "./components/ExportPdf.vue";
+import CustomButton from "./components/CustomButton.vue";
 
 export default {
+  created() {
+    const savedResume = localStorage.getItem('resume');
+    if(savedResume) {
+      try {
+        const resume = JSON.parse(savedResume);
+        this.loadIntoData(resume);
+      } catch(error) {
+        console.error("Error parsing saved resume configuration: ", error);
+      }
+    }
+  },
   components: {
     ResumeSection,
     SectionHeadline,
@@ -353,7 +369,8 @@ export default {
     PercentageInput,
     SelectInput,
     ImgUpload,
-    ExportPdf
+    ExportPdf,
+    CustomButton
   },
   data() {
     return {
@@ -534,6 +551,16 @@ export default {
     },
     toggleImageDisplay(isChecked) {
       this.showImage = isChecked;
+    },
+    saveConfig() {
+      localStorage.setItem('resume', JSON.stringify(this.$data));
+    },
+    loadIntoData(config) {
+      for(const key in config) {
+        if(this.$data.hasOwnProperty(key)) {
+          this[key] = config[key];
+        }
+      }
     }
   },
 };
