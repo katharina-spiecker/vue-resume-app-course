@@ -4,10 +4,8 @@
     <input
       type="file"
       accept="image/jpeg image/png image/jpg"
-      @change="changeImage"
-    >
+      @change="changeImage" />
   </label>
-
 </template>
 
 <script>
@@ -18,16 +16,15 @@ export default {
       if (selectedFile) {
         const reader = new FileReader();
 
-        reader.addEventListener('load', () => {
-          this.$emit('imageChanged', reader.result)
+        reader.addEventListener("load", () => {
+          this.$emit("imageChanged", reader.result);
         });
 
         reader.readAsDataURL(selectedFile);
       }
-    }
-  }
-}
-
+    },
+  },
+};
 </script>
 
 <style scoped>
@@ -45,5 +42,4 @@ label {
   font-size: 16px;
   background-color: #82c0cc;
 }
-
 </style>
